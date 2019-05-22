@@ -1,22 +1,24 @@
 #include <stdio.h>
-#include <stdbool.h>
 
+#define MAX_ROWS 3
+#define MAX_COLS 3
 
 // print the board
-void printBoard(char board[3][3], int maxRows, int maxCols)
+void printBoard(char board[MAX_ROWS][MAX_COLS])
 {
-    for (int rowCount = 0; rowCount < maxRows; rowCount++)
+    for (int rowCount = 0; rowCount < MAX_ROWS; rowCount++)
     {
         printf("[%c] [%c] [%c]\n", board[rowCount][0], board[rowCount][1], board[rowCount][2]);
     }
 }
 
 // Fill in the board with desired configuration
-void getBoardInput(char board[3][3], int maxRow, int maxCol)
+void getBoardInput(char board[MAX_ROWS][MAX_COLS])
 {
-    for (int rowCount = 0; rowCount < maxRow; rowCount++)
+	puts("Setup your board:");
+    for (int rowCount = 0; rowCount < MAX_ROWS; rowCount++)
     {
-        for (int colCount = 0; colCount < maxCol; colCount++)
+        for (int colCount = 0; colCount < MAX_COLS; colCount++)
         {
             char c = getchar();
             board[rowCount][colCount] = c;
@@ -25,12 +27,12 @@ void getBoardInput(char board[3][3], int maxRow, int maxCol)
 }
 
 // place move on the board
-int tryPlaceMove(int place, char c, char board[3][3], int maxRows, int maxCols)
+int tryPlaceMove(int place, char c, char board[MAX_ROWS][MAX_COLS])
 {
     int count = 0;
-    for (int rowCount = 0; rowCount < maxRows; rowCount++)
+    for (int rowCount = 0; rowCount < MAX_ROWS; rowCount++)
     {
-        for (int colCount = 0; colCount < maxCols; colCount++)
+        for (int colCount = 0; colCount < MAX_COLS; colCount++)
         {
 			int realPlace = place - 1;
             if (count++ == realPlace) {
@@ -49,7 +51,7 @@ int tryPlaceMove(int place, char c, char board[3][3], int maxRows, int maxCols)
     return 0;
 }
 
-int isLineWin(char board[3][3], int doVline)
+int isLineWin(char board[MAX_ROWS][MAX_COLS], int doVline)
 {
 	int lineWin = 0;
 	for (int i = 0; i < 3; i++)
@@ -82,9 +84,8 @@ int isLineWin(char board[3][3], int doVline)
 	return lineWin;
 }
 
-int CheckForWin(char board[3][3], int maxRows, int maxCols, int pos, char c)
-{
-	
+int CheckForWin(char board[MAX_ROWS][MAX_COLS], int pos, char c)
+{	
 	/*
 	Check \ diag
 	 0  1  2
@@ -94,7 +95,7 @@ int CheckForWin(char board[3][3], int maxRows, int maxCols, int pos, char c)
 	*/
 	char diagChar = board[0][0];
 	int isWinningDiag = 0;
-	for (int i = 1; i < maxRows;)
+	for (int i = 1; i < MAX_ROWS;)
 	{
 		char got = board[i][i++];
 		if (got == diagChar)
@@ -120,11 +121,12 @@ int CheckForWin(char board[3][3], int maxRows, int maxCols, int pos, char c)
 		return isWinningDiag;
 
 	}
+
 	//otherwise check the other diagnoal
 	isWinningDiag = 0;
-	int indx = maxRows - 1;
+	int indx = MAX_ROWS - 1;
 	char last = board[0][indx];
-	for (int i = 0; i < maxRows; i++)
+	for (int i = 0; i < MAX_ROWS; i++)
 	{
 		char current = board[i][indx - i];
 		if (last == current) {
@@ -140,27 +142,29 @@ int CheckForWin(char board[3][3], int maxRows, int maxCols, int pos, char c)
 		puts("diag win /");
 	}
 	
-	return isWinningDiag || isLineWin(board,1) || isLineWin(board,0);
+	return isWinningDiag || isLineWin(board, 1) || isLineWin(board, 0);
 }
 
-#define MAX_ROWS 3
-#define MAX_COLS 3
+
 
 int main(int argc, char** argv)
 {
 	// Start off with an empty board
-    int board[][MAX_COLS] = {
-        {' ',' ',' '},
-        {' ',' ',' '},
-        {' ',' ',' '},
-    };
+	char board[MAX_ROWS][MAX_COLS];
+
+	int count = 0;
+	for (int i = 0; i < MAX_ROWS; i++) {
+		for (int j = 0; j < MAX_COLS; j++) {			
+			board[i][j] = ++count + '0';
+		}
+	}
+	
 
     // Setup the board
-    puts("setup your board:");
-    getBoardInput(board, MAX_ROWS, MAX_COLS);
+    getBoardInput(board);
 
 	// Show how it starting board looks like
-    printBoard(board, MAX_ROWS, MAX_COLS);
+    printBoard(board);
 
 	// Ask players for moves
 	int moves = 0;
@@ -169,22 +173,22 @@ int main(int argc, char** argv)
 	int player = 1;
 	do
 	{
-		int pos;
-		char c;
+		int pos = 0;
+		char c = 0;
 
 		// Ask the user for input
-		printf("Player %d set your pos and char (eg 4X or 4O to add to positino 4): ", player);
+		printf("Player %d set your pos and char (eg 4X or 4O to add to X or O to position 4): ", player);
 		scanf_s("%d%c", &pos, &c);
-		isValid = tryPlaceMove(pos, c, board, MAX_ROWS, MAX_COLS);		
+		isValid = tryPlaceMove(pos, c, board);		
 				
 		// Show board configuration after move placed
-		printBoard(board, MAX_ROWS, MAX_COLS);
+		printBoard(board);
 		
 		// If the move was valid then loop again asking for next move
 		if(isValid)
 		{
 			moves++;			
-			isWinningMove = CheckForWin(board, MAX_ROWS, MAX_COLS, pos, c);			
+			isWinningMove = CheckForWin(board, pos, c);			
 		}
 		else
 		{
