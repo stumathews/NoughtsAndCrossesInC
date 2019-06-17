@@ -6,14 +6,11 @@
 // print the board
 void printBoard(char board[MAX_ROWS][MAX_COLS])
 {
-	for (int rowCount = 0; rowCount < MAX_ROWS; rowCount++)
-	{
-		for (int colCount = 0; colCount < MAX_COLS; colCount++)
-		{
+	for (int rowCount = 0; rowCount < MAX_ROWS; rowCount++) {
+		for (int colCount = 0; colCount < MAX_COLS; colCount++) {
 			printf("[%c]", board[rowCount][colCount]);
 		}
 		printf("\n");
-
 	}
 }
 
@@ -21,10 +18,8 @@ void printBoard(char board[MAX_ROWS][MAX_COLS])
 void getBoardInput(char board[MAX_ROWS][MAX_COLS])
 {
 	puts("Setup your board:");
-	for (int rowCount = 0; rowCount < MAX_ROWS; rowCount++)
-	{
-		for (int colCount = 0; colCount < MAX_COLS; colCount++)
-		{
+	for (int rowCount = 0; rowCount < MAX_ROWS; rowCount++) {
+		for (int colCount = 0; colCount < MAX_COLS; colCount++) {
 			char c = getchar();
 			board[rowCount][colCount] = c;
 		}
@@ -43,10 +38,8 @@ int isValidChar(char c)
 int tryPlaceMove(int place, char c, char board[MAX_ROWS][MAX_COLS])
 {
 	int count = 0;
-	for (int rowCount = 0; rowCount < MAX_ROWS; rowCount++)
-	{
-		for (int colCount = 0; colCount < MAX_COLS; colCount++)
-		{
+	for (int rowCount = 0; rowCount < MAX_ROWS; rowCount++) {
+		for (int colCount = 0; colCount < MAX_COLS; colCount++) {
 			int realPlace = place - 1;
 			if (count++ == realPlace) {
 				// Get the current value for this and see if its its empty, and if so place it, otherwise return false (invalid)
@@ -65,33 +58,21 @@ int tryPlaceMove(int place, char c, char board[MAX_ROWS][MAX_COLS])
 int isLineWin(char board[MAX_ROWS][MAX_COLS], int doVline)
 {
 	int lineWin = 0;
-	for (int i = 0; i < MAX_ROWS; i++)
-	{
+	for (int i = 0; i < MAX_ROWS; i++) 	{
 		if (lineWin)
 			break;
 		char lastVal = doVline ? board[0][i] : board[i][0];
-		for (int j = 0; j < MAX_COLS; j++)
-		{
+		for (int j = 0; j < MAX_COLS; j++) {
 			char current = doVline ? board[j][i] : board[i][j];
-			if (lastVal == current && isValidChar(current))
-			{
+			if (lastVal == current && isValidChar(current)) {
 				lastVal = current;
 				lineWin = 1;
-			}
-			else
-			{
+			} else {
 				lineWin = 0;
 				break;
 			}
 		}
 	}
-	/*if (lineWin)
-	{
-	 if (doVline)
-	  puts("Vline win");
-	 else
-	  puts("hline win");
-	}*/
 	return lineWin;
 }
 
@@ -106,11 +87,9 @@ int CheckForWin(char board[MAX_ROWS][MAX_COLS], int pos, char c)
 	*/
 	char diagChar = board[0][0];
 	int isWinningDiag = 0;
-	for (int i = 0; i < MAX_ROWS;)
-	{
+	for (int i = 0; i < MAX_ROWS;){
 		char got = board[i][i++];
-		if (got == diagChar && isValidChar(got))
-		{
+		if (got == diagChar && isValidChar(got)) {
 			diagChar == got;
 			isWinningDiag = 1;
 			continue;
@@ -127,11 +106,8 @@ int CheckForWin(char board[MAX_ROWS][MAX_COLS], int pos, char c)
 	[x][][] 2
 	*/
 	if (isWinningDiag)
-	{
-		//puts("diag win \\");
 		return isWinningDiag;
-
-	}
+	
 
 	//otherwise check the other diagnoal
 	isWinningDiag = 0;
@@ -148,10 +124,6 @@ int CheckForWin(char board[MAX_ROWS][MAX_COLS], int pos, char c)
 		isWinningDiag = 0;
 		break;
 	}
-	/*if (isWinningDiag)
-	{
-	 puts("diag win /");
-	}*/
 
 	return isWinningDiag || isLineWin(board, 1) || isLineWin(board, 0);
 }
@@ -162,10 +134,8 @@ int main(int argc, char** argv)
 	char board[MAX_ROWS][MAX_COLS];
 
 	int count = 0;
-	for (int i = 0; i < MAX_ROWS; i++)
-	{
-		for (int j = 0; j < MAX_COLS; j++)
-		{
+	for (int i = 0; i < MAX_ROWS; i++) {
+		for (int j = 0; j < MAX_COLS; j++) {
 			board[i][j] = ++count + '0';
 		}
 	}
@@ -207,18 +177,9 @@ int main(int argc, char** argv)
 		{
 			moves++;
 			isWinningMove = CheckForWin(board, pos, c);
-			if (!isWinningMove)
-			{
-				if (player == 1)
-				{
-					player = 2;
-				}
-				else
-				{
-					player = 1;
-				}
+			if (!isWinningMove) {
+				player = (player == 1 ? 2 : 1);
 			}
-
 		}
 		else
 		{
